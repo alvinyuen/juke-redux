@@ -13,6 +13,8 @@ import PlayerContainer from '../containers/PlayerContainer';
 
 import { convertAlbum, convertAlbums, convertSong, skip } from '../utils';
 
+import {dispatchProgress, setProgress} from '../action-creators/player';
+
 //import store
 import store from '../store';
 
@@ -22,7 +24,7 @@ export default class AppContainer extends Component {
     super(props);
     this.state = Object.assign({}, store.getState(), initialState);
 
-    this.selectAlbum = this.selectAlbum.bind(this);
+    // this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
     this.addPlaylist = this.addPlaylist.bind(this);
     this.selectPlaylist = this.selectPlaylist.bind(this);
@@ -38,7 +40,7 @@ export default class AppContainer extends Component {
 
     Promise
       .all([
-        axios.get('/api/albums/'),
+        // axios.get('/api/albums/'),
         axios.get('/api/artists/'),
         axios.get('/api/playlists')
       ])
@@ -48,33 +50,29 @@ export default class AppContainer extends Component {
     AUDIO.addEventListener('ended', () =>
       this.next());
     AUDIO.addEventListener('timeupdate', () =>
-      this.setProgress(AUDIO.currentTime / AUDIO.duration));
+      store.dispatch(dispatchProgress(AUDIO.currentTime / AUDIO.duration)));
   }
 
   componentWillUnmount(){
     this.unsubscribe();
   }
 
-  onLoad (albums, artists, playlists) {
+  onLoad (artists, playlists) {
     this.setState({
-      albums: convertAlbums(albums),
+      // albums: convertAlbums(albums),
       artists: artists,
       playlists: playlists
     });
   }
 
 
-  setProgress (progress) {
-    this.setState({ progress: progress });
-  }
-
-  selectAlbum (albumId) {
-    axios.get(`/api/albums/${albumId}`)
-      .then(res => res.data)
-      .then(album => this.setState({
-        selectedAlbum: convertAlbum(album)
-      }));
-  }
+  // selectAlbum (albumId) {
+  //   axios.get(`/api/albums/${albumId}`)
+  //     .then(res => res.data)
+  //     .then(album => this.setState({
+  //       selectedAlbum: convertAlbum(album)
+  //     }));
+  // }
 
   selectArtist (artistId) {
     Promise

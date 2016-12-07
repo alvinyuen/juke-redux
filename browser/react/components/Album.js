@@ -1,20 +1,44 @@
 import React from 'react';
 import Songs from '../components/Songs';
+import {selectAlbum } from '../action-creators/albums';
+import store from '../store';
+import { toggleOne } from '../action-creators/player';
 
 class Album extends React.Component {
 
-  componentDidMount () {
-    const selectAlbum = this.props.selectAlbum;
-    const albumId = this.props.routeParams.albumId;
+  constructor(props){
+    super(props);
+    this.state = Object.assign({}, store.getState());
 
-    selectAlbum(albumId);
+    this.playSong= this.playSong.bind(this);
+  }
+
+  componentDidMount () {
+    this.unsubscribe = store.subscribe(() => {
+            this.setState(store.getState())
+        });
+
+    // const selectAlbum = this.props.selectAlbum;
+    const albumId = this.props.routeParams.albumId;
+    store.dispatch(selectAlbum(albumId));
+  }
+
+
+  playSong(song, songList ){
+        store.dispatch(toggleOne(song, songList));
+    }
+
+
+  componentWillUnmount(){
+    this.unsubscribe();
   }
 
   render () {
-    const album = this.props.selectedAlbum;
-    const currentSong = this.props.currentSong;
-    const isPlaying = this.props.isPlaying;
-    const toggleOne = this.props.toggleOne;
+    const album = this.state.albums.selectedAlbum;
+    console.log('album', this.state.albums.selectedAlbum);
+    const currentSong = this.state.player.currentSong;
+    const isPlaying = this.state.player.isPlaying;
+    const currentSongList = this.state.player.currentSongList;
 
     return (
       <div className="album">
@@ -25,8 +49,9 @@ class Album extends React.Component {
         <Songs
           songs={album.songs}
           currentSong={currentSong}
+          currentSongList={currentSongList}
           isPlaying={isPlaying}
-          toggleOne={toggleOne} />
+          playSong={this.playSong} />
       </div>
     );
   }

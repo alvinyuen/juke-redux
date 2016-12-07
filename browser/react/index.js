@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory, IndexRedirect } from 'react-router';
+import { Router, Route, browserHistory, IndexRedirect } from 'react-router';
 import AppContainer from './containers/AppContainer';
 import Albums from './components/Albums';
 import Album from './components/Album';
@@ -11,15 +11,16 @@ import NewPlaylistContainer from './containers/NewPlaylistContainer';
 import Playlist from './components/Playlist';
 import LyricsContainer from './containers/LyricsContainer';
 import SongsContainer from './containers/SongsContainer';
+import AlbumsContainer from './containers/AlbumsContainer'
 
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path='/' component={AppContainer} foo={'foo'}>
-      <Route path="/albums" component={Albums} />
+      <Route path="/albums" component={AlbumsContainer} />
       <Route path="/albums/:albumId" component={Album} />
       <Route path="/artists" component={FilterableArtistsContainer} />
       <Route path="/artists/:artistId" component={Artist}>
-        <Route path="albums" component={Albums} />
+        <Route path="albums" component={AlbumsContainer} />
         <Route path="songs" component={SongsContainer} />
       </Route>
       <Route path="/new-playlist" component={NewPlaylistContainer} />

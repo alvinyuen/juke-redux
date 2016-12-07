@@ -12,7 +12,7 @@ const Player = (props) => {
 
   const playSong = props.playSong;
   const nextSong = props.nextSong;
-  const prevSong = props.prevSong
+  const prevSong = props.prevSong;
 
   return (
     <footer>

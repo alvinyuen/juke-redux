@@ -54,6 +54,7 @@ export default class PlayerContainer extends React.Component {
         currentSong = {this.state.player.currentSong}
         currentSongList={this.state.player.currentSongList}
         isPlaying={this.state.player.isPlaying}
+        progress={this.state.player.progress}
         />
   }
 
