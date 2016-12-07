@@ -10,17 +10,21 @@ const Player = (props) => {
   const toggle = props.toggle;
   const next = props.next;
 
+  const playSong = props.playSong;
+  const nextSong = props.nextSong;
+  const prevSong = props.prevSong
+
   return (
     <footer>
       <div style={!currentSong.id ? {display: 'none'} : null}>
         <div className="pull-left">
-          <button className="btn btn-default" onClick={prev}>
+          <button className="btn btn-default" onClick={()=>{prevSong(currentSongList, currentSong)}}>
             <span className="glyphicon glyphicon-step-backward"></span>
           </button>
-          <button className="btn btn-default" onClick={toggle}>
+          <button className="btn btn-default" onClick={()=> {playSong(currentSong, currentSongList)}}>
             <span className={isPlaying ? 'glyphicon glyphicon-pause' : 'glyphicon glyphicon-play'}></span>
           </button>
-          <button className="btn btn-default" onClick={next}>
+          <button className="btn btn-default" onClick={()=>{nextSong(currentSongList, currentSong)}}>
             <span className="glyphicon glyphicon-step-forward"></span>
           </button>
         </div>

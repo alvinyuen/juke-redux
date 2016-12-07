@@ -1,17 +1,16 @@
 import React from 'react';
 import store from '../store';
 import Lyrics from '../components/Lyrics'
-import setLyrics from '../action-creators/lyrics'
+import setLyrics, { fetchLyrics } from '../action-creators/lyrics'
 import axios from 'axios'
-import {SET_LYRICS} from '../constants'
+import {SET_LYRICS} from '../constants';
+
 
 export default class LyricsContainer extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = store.getState();
-        this.state.artistQuery = ""
-        this.state.songQuery = ""
+        this.state = Object.assign({}, store.getState(), {artistQuery: '', songQuery: ''});
         this.setArtist = this.setArtist.bind(this)
         this.setSong = this.setSong.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -25,18 +24,14 @@ export default class LyricsContainer extends React.Component {
         this.setState({songQuery : text})
     }
 
+
     handleSubmit(){
-        axios.get(`/api/lyrics/${this.state.artistQuery}/${this.state.songQuery}`)
-        .then(res=>res.data)
-        .then((data)=> {
-            const lyrics = setLyrics(data.lyric)
-            store.dispatch(lyrics)
-        })
+        store.dispatch(fetchLyrics(this.state.artistQuery, this.state.songQuery))
     }
 
     componentDidMount(){
         this.unsubscribe = store.subscribe(() => {
-            this.setState(this.state)
+            this.setState(store.getState())
         });
     }
 
@@ -45,12 +40,13 @@ export default class LyricsContainer extends React.Component {
     }
 
     render(){
+
     return <Lyrics
-      text={this.state.text}
+      text={this.state.lyrics.text}
       setArtist={this.setArtist}
       setSong={this.setSong}
-      artistQuery={this.state.artistQuery}
-      songQuery={this.state.songQuery}
+      artistQuery={this.state.lyrics.artistQuery}
+      songQuery={this.state.lyrics.songQuery}
       submit={this.handleSubmit}
     />
   }
